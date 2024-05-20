@@ -1,0 +1,86 @@
+<dashboard version="1.1" theme="light">
+  <label>Registration plates game</label>
+  <description></description>
+  <row>
+    <panel>
+      <single>
+        <title>Number of plates without solution</title>
+        <search>
+          <query>| inputlookup equations.csv
+| where isnull(solution)
+| stats count(plate_num) as count_of_null_solution</query>
+          <earliest>$earliest$</earliest>
+          <latest>$latest$</latest>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Number of plates with at least one solution</title>
+        <search>
+          <query>| inputlookup equations.csv
+| search total_num=1
+| stats count(plate_num) as count_of_plate_num_with_total_num_value_1</query>
+          <earliest>$earliest$</earliest>
+          <latest>$latest$</latest>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Successful ratio</title>
+        <search>
+          <query>| inputlookup equations.csv
+| search total_num=1
+| stats count(eval(total_num=1)) as count_total_num_1
+| eventstats count as total_count
+| eval percentage = round((count_total_num_1/total_count)/100,2) . " %"
+| table percentage</query>
+          <earliest>$earliest$</earliest>
+          <latest>$latest$</latest>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Plate with most matches (last digit not 0 or 1)</title>
+        <search>
+          <query>| inputlookup equations.csv
+| search total_num &gt; 1
+| search NOT [ | inputlookup equations.csv | search plate_num=*0 OR plate_num=*1 | table plate_num ]
+| eval last_digit = substr(plate_num, -1)
+| search last_digit!="0" last_digit!="1"
+| stats max(total_num) as max_total_num by plate_num
+| sort -max_total_num
+| head 1</query>
+          <earliest>$earliest$</earliest>
+          <latest>$latest$</latest>
+        </search>
+        <option name="drilldown">all</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Plates with only 1 solution</title>
+        <search>
+          <query>| inputlookup equations.csv
+| search total_num=1 solution!=""
+| table plate_num, solution</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

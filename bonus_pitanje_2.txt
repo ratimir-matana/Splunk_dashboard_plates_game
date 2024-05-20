@@ -1,0 +1,17 @@
+- Izbjegavanje redudantnih kalkulacija, možemo spremiti rezultate kalkulacija koje se ponavljaju i samo ih ponovo
+koristiti, u slučaju kada se ponavljaju
+
+- Koristiti paralelno procesiranje/obradu za generiranje jednadžbi istodobno, koristeći python modul "multiprocessing"
+kako bi iskoristili više CPU jezgri
+
+- Efikasno optimiziranje jednadžbi, umjesto korištenja funkcije eval() koja može biti spora, parsirati i evaluirati
+jednadžbe bez eval() funkcije
+
+- Optimiziranje algoritma za generiranje jednadžbi, promjena pristupa u generiranju jednadžbi koristeći učinkovitiji
+algoritam za generiranje jednadžbi
+
+- Koristeći "streaming" tehnike ako je moguće, da se jednadžbe zapisuju u CSV datoteku u trenutku kad se i generiraju, radije
+nego da se spremaju sve u memoriju i onda ponovo zapišu u CSV datoteku na kraju. Ovo smanjuje potrošnju memorije.
+
+- Identificirajući dijelove koda koji uzimaju najviše vremena koristeći alate za profiliranje i optimizirati te dijelove.
+Time se povećavaju performanse i smanjuje vrijeme izvršavanja
